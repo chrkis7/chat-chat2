@@ -1,11 +1,21 @@
-import { StyleSheet, Text, View } from 'react-native';
-//import { GiftedChat } from 'react-native-gifted-chat';
+import { useCallback, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 
 const ChatScreen = () => {
+  const [messages, setMessages] = useState<IMessage[]>([]);
+
+  const handleSend = useCallback((newMessages: IMessage[] = []) => {
+    setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages));
+  }, [])
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Chat screen</Text>
-    </View>
+    <GiftedChat
+        messages={messages}
+        onSend={messages => handleSend(messages)}
+        user={{ _id: 1 }}
+        isKeyboardInternallyHandled={false} // Needed for Android
+    />
   )
 }
 
